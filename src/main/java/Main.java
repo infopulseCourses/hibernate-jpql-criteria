@@ -1,5 +1,3 @@
-import entity.Admin;
-import entity.User;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
