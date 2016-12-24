@@ -15,16 +15,6 @@ public class Main {
 
         entityManager.getTransaction().begin();
 
-        User user = new User();
-        Admin admin = new Admin();
-
-        user.setName("User1");
-        admin.setName("Admin1");
-        admin.setSurname("AdminSurname1");
-        
-        entityManager.persist(user);
-        entityManager.persist(admin);
-
         entityManager.getTransaction().commit();
         entityManager.close();
         sessionFactory.close();
