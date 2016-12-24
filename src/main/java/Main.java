@@ -92,16 +92,20 @@ public class Main {
 
 
         CriteriaBuilder builder = entityManager2.getCriteriaBuilder();
+
         CriteriaQuery<Client> criteriaQuery = builder.createQuery(Client.class);
-        ParameterExpression<Long> id = builder.parameter(Long.class);
         Root<Client> root = criteriaQuery.from(Client.class);
+
+        ParameterExpression<Long> id = builder.parameter(Long.class);
         criteriaQuery.where(builder.equal(root.get(Client_.id),id));
+
         List<Client> clientsCriteria = entityManager2.createQuery(criteriaQuery).setParameter(id,26l).getResultList();
+
         clientsCriteria.forEach(client -> System.out.println(client.getTotalSum()));
+
         entityManager2.getTransaction().commit();
 
         entityManager2.close();
         sessionFactory.close();
-
     }
 }
