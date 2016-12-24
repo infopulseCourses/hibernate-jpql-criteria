@@ -1,9 +1,14 @@
 import entity.Bank;
 import entity.Client;
+import entity.Client_;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,9 +72,32 @@ public class Main {
         EntityManager entityManager2 = sessionFactory.createEntityManager();
         entityManager2.getTransaction().begin();
 
-        List<Client> clients = entityManager2.createQuery("from entity.Client",Client.class).getResultList();
-        clients.forEach(client -> System.out.println(client.getTotalSum()));
+       // CriteriaBuilder builder = entityManager2.getCriteriaBuilder();
+       // CriteriaQuery<Client> criteriaQuery = builder.createQuery(Client.class);
+     //   criteriaQuery.from(Client.class);
+       // criteriaQuery.select(root);
+       // List<Client> clients = entityManager2.createQuery(criteriaQuery).getResultList();
 
+
+       // List<Client> clients = entityManager2.createQuery("from entity.Client",Client.class).getResultList();
+      //  clients.forEach(client -> System.out.println(client.getTotalSum()));
+        entityManager2.getTransaction().commit();
+
+        entityManager2.getTransaction().begin();
+
+      /*  List<Client> clientsJPQL = entityManager2.createQuery("from entity.Client c where c.id = :id ",Client.class)
+                .setParameter("id", 20l)
+                .getResultList();
+        clientsJPQL.forEach(client -> System.out.println("Total sum = "+client.getTotalSum()));*/
+
+
+        CriteriaBuilder builder = entityManager2.getCriteriaBuilder();
+        CriteriaQuery<Client> criteriaQuery = builder.createQuery(Client.class);
+        ParameterExpression<Long> id = builder.parameter(Long.class);
+        Root<Client> root = criteriaQuery.from(Client.class);
+        criteriaQuery.where(builder.equal(root.get(Client_.id),id));
+        List<Client> clientsCriteria = entityManager2.createQuery(criteriaQuery).setParameter(id,26l).getResultList();
+        clientsCriteria.forEach(client -> System.out.println(client.getTotalSum()));
         entityManager2.getTransaction().commit();
 
         entityManager2.close();
